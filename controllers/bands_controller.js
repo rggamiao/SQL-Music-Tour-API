@@ -1,8 +1,10 @@
 const bands = require("express").Router();
 const { where } = require("sequelize");
 const db = require("../models");
-const { Band } = db;
 const { Op } = require("sequelize");
+const { Band, MeetGreet } = db;
+const SetTime = require("../models/setTimes");
+const Event = require("../models/events")
 
 // Band Index route - GET
 bands.get("/", async (req, res) => {
@@ -21,11 +23,63 @@ bands.get("/", async (req, res) => {
   }
 });
 
-// Show Route - POST
-bands.get("/:id", async (req, res) => {
+// Band Show Route with MeetGreet, Event, & SetTime render WIP - GET
+
+bands.get("/:name", async (req, res) => {
   try {
     const foundBand = await Band.findOne({
-      where: { band_id: req.params.id },
+      where: { name: req.query.name },
+      include: [
+        {
+          model: MeetGreet,
+          as: "meet_greets",
+          attributes: { exclude: ["band_id", "event_id"] },
+          include: {
+            model: Event,
+            as: "event",
+            where: {
+              name: {
+                [Op.like]: `%${req.query.event ? req.query.event : ""}%`,
+              },
+            },
+          },
+        },
+        {
+          model: SetTime,
+          as: "set_times",
+          attributes: { exclude: ["band_id", "event_id"] },
+          include: {
+            model: Event,
+            as: "event",
+            where: {
+              name: {
+                [Op.like]: `%${req.query.event ? req.query.event : ""}%`,
+              },
+            },
+          },
+        },
+        {
+          model: Stage,
+          as: "stage",
+          attributes: ["stage_id", "stage_name"],
+          include: [
+            {
+              model: StageEvent,
+              as: "stage_events",
+              attributes: ["stage_event_id", "event_id"],
+              include: {
+                model: Event,
+                as: "event",
+                where: {
+                  name: {
+                    [Op.like]: `%${req.query.event ? req.query.event : ""}%`,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
     });
     res.status(200).json(foundBand);
   } catch (error) {

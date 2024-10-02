@@ -1,11 +1,10 @@
 const stages = require("express").Router();
-const { Stage } = require('../models');
+const { Stages } = require("../models"); // Adjusted to match your model definition
 
 // Stage Index route - GET
 stages.get("/", async (req, res) => {
   try {
-    // Find all stages in ascending order of stage_name
-    const allStages = await Stage.findAll({
+    const allStages = await Stages.findAll({
       order: [["stage_name", "ASC"]],
     });
     res.status(200).json(allStages);
@@ -17,8 +16,8 @@ stages.get("/", async (req, res) => {
 // Stage Show Route - GET
 stages.get("/:id", async (req, res) => {
   try {
-    const stage = await Stage.findOne({
-      where: { stages_id: req.params.id },
+    const stage = await Stages.findOne({
+      where: { stages_id: req.params.id }, // Corrected to match the model definition
     });
     if (stage) {
       res.status(200).json(stage);
@@ -33,7 +32,7 @@ stages.get("/:id", async (req, res) => {
 // Create Stage Route - POST
 stages.post("/", async (req, res) => {
   try {
-    const newStage = await Stage.create(req.body);
+    const newStage = await Stages.create(req.body);
     res.status(201).json({
       message: "New stage added.",
       data: newStage,
@@ -46,9 +45,9 @@ stages.post("/", async (req, res) => {
 // Stage Update Route - PUT
 stages.put("/:id", async (req, res) => {
   try {
-    const updatedStages = await Stage.update(req.body, {
+    const updatedStages = await Stages.update(req.body, {
       where: {
-        stages_id: req.params.id,
+        stages_id: req.params.id, // Corrected to match the model definition
       },
     });
     if (updatedStages[0]) {
@@ -68,7 +67,7 @@ stages.put("/:id", async (req, res) => {
 // Stage Delete Route - DELETE
 stages.delete("/:id", async (req, res) => {
   try {
-    const deletedStages = await Stage.destroy({
+    const deletedStages = await Stages.destroy({
       where: {
         stages_id: req.params.id,
       },
