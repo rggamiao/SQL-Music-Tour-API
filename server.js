@@ -1,35 +1,23 @@
-// Dependencies
-const express = require('express')
-const app = express()
-const { Sequelize } = require('sequelize')
+require('dotenv').config();
+const express = require('express');
+const { sequelize } = require('./models');
 
-// Config / Middleware
-require('dotenv').config()
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Root
-app.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Welcome to the Tour API SF'
-    })
-})
+app.use(express.json());
 
-// Controllers
+// Import and use your routes here
+// const bandRoutes = require('./routes/bandRoutes');
+// app.use('/api/bands', bandRoutes);
 
-// Bands Controller
-const bandsController = require('./controllers/bands_controller')
-app.use('/bands', bandsController)
-
-// Event Controller
-const eventsController = require('./controllers/events_controller')
-app.use('/events', eventsController)
-
-// Stages Controller
-const stagesController = require('./controllers/stages_controller')
-app.use('/stages', stagesController)
-
-// Port Listener
-app.listen(process.env.PORT, () => {
-    console.log(`🎸 Rockin' on port: ${process.env.PORT}`)
-})
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log('Database connected');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
+  });
