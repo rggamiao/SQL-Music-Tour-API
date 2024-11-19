@@ -1,4 +1,6 @@
 const bands = require("express").Router();
+const express = require('express');
+const router = express.Router();
 const { where } = require("sequelize");
 const db = require("../models");
 const { Op } = require("sequelize");

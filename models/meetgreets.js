@@ -1,47 +1,35 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class meets_greets extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class MeetGreet extends Model {
     static associate(models) {
       // define association here
+      MeetGreet.belongsTo(models.Event, { foreignKey: 'event_id' });
+      MeetGreet.belongsTo(models.Band, { foreignKey: 'band_id' });
     }
   }
-  meets_greets.init(
-    {
-      meet_greet_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      event_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      band_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      meet_start: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      meet_end: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
+  MeetGreet.init({
+    meet_greet_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    {
-      sequelize,
-      modelName: "meets_greets",
-      tableName: "meets_greets",
-      timestamps: false,
-    }
-  );
-  return meets_greets;
+    event_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    band_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    meet_start: DataTypes.DATE,
+    meet_end: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'MeetGreet',
+    tableName: 'meets_greets',
+    timestamps: false
+  });
+  return MeetGreet;
 };

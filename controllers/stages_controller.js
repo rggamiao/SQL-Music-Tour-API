@@ -1,5 +1,7 @@
 const stages = require("express").Router();
-const { Stages } = require("../models"); // Adjusted to match your model definition
+const { Stages } = require("../models");
+const express = require('express');
+const router = express.Router();
 
 // Stage Index route - GET
 stages.get("/", async (req, res) => {
@@ -9,7 +11,7 @@ stages.get("/", async (req, res) => {
     });
     res.status(200).json(allStages);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -17,7 +19,7 @@ stages.get("/", async (req, res) => {
 stages.get("/:id", async (req, res) => {
   try {
     const stage = await Stages.findOne({
-      where: { stages_id: req.params.id }, // Corrected to match the model definition
+      where: { stages_id: req.params.id },
     });
     if (stage) {
       res.status(200).json(stage);
@@ -25,7 +27,7 @@ stages.get("/:id", async (req, res) => {
       res.status(404).json({ message: "Stage not found" });
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -37,8 +39,8 @@ stages.post("/", async (req, res) => {
       message: "New stage added.",
       data: newStage,
     });
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -47,7 +49,7 @@ stages.put("/:id", async (req, res) => {
   try {
     const updatedStages = await Stages.update(req.body, {
       where: {
-        stages_id: req.params.id, // Corrected to match the model definition
+        stages_id: req.params.id,
       },
     });
     if (updatedStages[0]) {
@@ -59,8 +61,8 @@ stages.put("/:id", async (req, res) => {
         message: `Stage with ID ${req.params.id} not found`,
       });
     }
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -81,8 +83,8 @@ stages.delete("/:id", async (req, res) => {
         message: `Stage with ID ${req.params.id} not found`,
       });
     }
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

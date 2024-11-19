@@ -1,4 +1,6 @@
 const events = require("express").Router();
+
+
 const { events: Event } = require('../models');  // Updated import
 
 // Event Index route - GET
