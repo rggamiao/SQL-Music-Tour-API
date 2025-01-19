@@ -2,52 +2,38 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class MeetsGreets extends Model {
-    static associate(models) {
-      MeetsGreets.belongsTo(models.events, {
-        foreignKey: 'event_id',
-        as: 'event'
-      });
-
-      MeetsGreets.belongsTo(models.bands, {
-        foreignKey: 'band_id',
-        as: 'band'
+  class Stages extends Model {
+    static associate({ Event, StageEvent }) {
+      Stages.belongsToMany(Event, {
+        foreignKey: "stages_id",
+        as: "events",
+        through: StageEvent,
       });
     }
+
+    static associate(models) {}
   }
 
-  MeetsGreets.init(
+  Stages.init(
     {
-      meet_greet_id: {
+      stages_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      event_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      band_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      meet_start: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      meet_end: {
-        type: DataTypes.DATE,
+      stage_name: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "MeetsGreets",
-      tableName: "meets_greets",
+      modelName: "Stages",
+      tableName: "stages",
       timestamps: false,
     }
   );
 
-  return MeetsGreets;
+  return Stages;
 };

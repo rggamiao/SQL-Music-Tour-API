@@ -1,39 +1,49 @@
-'use strict';
-const { Model } = require('sequelize');
-
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Band extends Model {
+    static associate({ MeetGreet }) {
+      // meet and greets 
+      Band.hasMany(MeetGreet, {
+        foreignKey: "band_id",
+        as: "meet_greets"
+      })
+  }  
+
     static associate(models) {
-      // Define associations here
-      Band.hasMany(models.Event, { foreignKey: 'band_id' });
-      Band.hasMany(models.MeetGreet, { foreignKey: 'band_id' });
-      
-      // Assuming user_relation is a model defined elsewhere
-      Band.belongsTo(models.UserRelation, { foreignKey: 'user_relation_id' });
+      // define association here
     }
   }
-  
-  Band.init({
-    band_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+  Band.init(
+    {
+      band_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      genre: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      available_start_time: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      end_time: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    genre: DataTypes.STRING,
-    user_relation_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+    {
+      sequelize,
+      modelName: "Band",
+      tableName: "bands",
+      timestamps: false,
     }
-  }, {
-    sequelize,
-    modelName: 'Band',
-    tableName: 'bands',
-    timestamps: false
-  });
-  
+  );
   return Band;
 };

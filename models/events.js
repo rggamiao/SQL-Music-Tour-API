@@ -1,50 +1,39 @@
-"use strict";
-const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
-  class events extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+'use strict';
+
+const { Model, DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
+  class Event extends Model {
     static associate(models) {
-      events.belongsTo(models.Band, { 
-        foreignKey: 'band_id',
-        as: 'band'
-      });
+      // Define associations here
+      // Example: Event.belongsTo(models.Band, { foreignKey: 'band_id' });
     }
   }
-  events.init(
-    {
-      event_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      start_time: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      end_time: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
+
+  Event.init({
+    event_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    {
-      sequelize,
-      modelName: "events",
-      tableName: "events",
-      timestamps: false,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    band_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
-  );
-  return events;
+  }, {
+    sequelize,
+    modelName: 'Event',
+    tableName: 'events',
+    timestamps: false
+  });
+
+  return Event;
 };

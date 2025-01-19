@@ -10,7 +10,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: process.env.DB_DIALECT,
-  logging: console.log, // This will log the SQL queries
+  logging: console.log,
   dialectOptions: {
     ssl: process.env.DB_SSL === 'true' ? {
       require: true,
@@ -22,7 +22,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 // Middleware
 app.use(express.json());
 
-// Import controllers (moved here to avoid duplicate imports)
+// Import controllers
 const bandsController = require('./controllers/bands_controller');
 const eventsController = require('./controllers/events_controller');
 const stagesController = require('./controllers/stages_controller');
@@ -78,4 +78,4 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-module.exports = { sequelize }; // Export sequelize for use in models/controllers
+module.exports = { sequelize };
